@@ -88,7 +88,7 @@ public:
 			this->consumption = consumption;
 		else
 			this->consumption = MAX_ENGINE_CONSUMPTION / 2;
-		consumption_per_second = consumption * .3e-4;
+		consumption_per_second = this -> consumption * .3e-4;
 	}
 	explicit Engine(double consumption)
 	{
@@ -236,7 +236,7 @@ void main()
 	engine.info();
 #endif // ENGINE_CHECK
 
-	Car bmw(0, 80);
+	Car bmw(8, 80);
 	cout << "Press Enter to get in " << endl;
 	bmw.control_car();
 }
