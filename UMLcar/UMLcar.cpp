@@ -74,13 +74,13 @@ public:
 	{
 		return is_started;
 	}
-	bool start()
+	void start()
 	{
-		return is_started = true;
+		is_started = true;
 	}
-	bool stop()
+	void stop()
 	{
-		return is_started = false;
+		is_started = false;
 	}
 	void set_consumption(double consumption)
 	{
@@ -119,7 +119,7 @@ class Car
 	struct control
 	{
 		std::thread panel_thread;
-		std::thread engone_idle_thread;
+		std::thread engine_idle_thread;
 		std::thread free_eheeling_thread;
 	}control;
 public:
@@ -139,13 +139,16 @@ public:
 	}
 	void start_engine()
 	{
-		if (tank.get_fuel_level()) engine.start();
-		control.engone_idle_thread = std::thread(&Car::engine_idle, this);
+		if (tank.get_fuel_level())
+		{
+			engine.start();
+			control.engine_idle_thread = std::thread(&Car::engine_idle, this);
+		}
 	}
 	void stop_engine()
 	{
 		engine.stop();
-		control.engone_idle_thread.join();
+		if(control.engine_idle_thread.joinable())control.engine_idle_thread.join();
 	}
 	void get_in()
 	{
@@ -155,7 +158,7 @@ public:
 	void get_out()
 	{
 		driver_inside = false;
-		control.panel_thread.join();
+		if(control.panel_thread.joinable())control.panel_thread.join();
 		system("CLS");
 		cout << "You are out of car";
 	}
@@ -183,7 +186,9 @@ public:
 				break;
 				// control_panel();
 			case Escape:
-				if (control.panel_thread.joinable())get_out();
+				//if (control.panel_thread.joinable())
+				stop_engine();
+				get_out();
 				break;
 			}
 		} while (key != 27);
@@ -200,7 +205,15 @@ public:
 		while (driver_inside)
 		{
 			system("CLS");
-			cout << "Fuel level: " << std::setprecision(4) << fixed << tank.get_fuel_level() << " Liters. \n";
+			cout << "Fuel level: " << std::setprecision(4) << fixed << tank.get_fuel_level() << " Liters.";
+			if (tank.get_fuel_level() < 5)
+			{
+				HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+				SetConsoleTextAttribute(hConsole, 0x0C);
+				cout << "\tLOW FUEL";
+				SetConsoleTextAttribute(hConsole, 0x07);
+			}
+			cout << endl;
 			cout << "Engine is " << (engine.started() ? "started " : "stoped ") << endl;
 			std::this_thread::sleep_for(1s);
 		}
