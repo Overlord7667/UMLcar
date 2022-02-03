@@ -111,6 +111,9 @@ public:
 #define Enter 13
 #define Escape 27
 
+#define MAX_SPEED_LOW 120
+#define MAX_SPEED_HIGH 400
+
 class Car
 {
 	Tank tank;
@@ -120,12 +123,19 @@ class Car
 	{
 		std::thread panel_thread;
 		std::thread engine_idle_thread;
-		std::thread free_eheeling_thread;
+		std::thread free_weheeling_thread;
 	}control;
+
+	const int MAX_SPEED;
+		int speed;
 public:
-	Car(double engine_consumption, unsigned int tank_volume) :engine(engine_consumption), tank(tank_volume)
+	Car(double engine_consumption, unsigned int tank_volume, int max_speed)
+		:engine(engine_consumption),
+		tank(tank_volume),
+		MAX_SPEED(max_speed>=MAX_SPEED_LOW&&max_speed<=MAX_SPEED_HIGH?max_speed :200)
 	{
 		driver_inside = false;
+		speed = 0;
 		cout << "Your car is ready to go \t" << this << endl;
 	}
 	~Car()
@@ -175,9 +185,11 @@ public:
 				if (driver_inside)get_out();
 				else get_in();
 				break;
-			case'F' || 'f': case 'f':
+			case'F': case 'f':
 				double fuel;
-				cout << "Введите объём топлива: "; cin >> fuel;
+				cout << "Введите объём топлива: ";// cin >> fuel;
+				cin.clear();
+				cin >> fuel;
 				fill(fuel);
 				break;
 			case'I':case'i'://Зажигание
@@ -185,12 +197,31 @@ public:
 				else start_engine();
 				break;
 				// control_panel();
+				case 'W':case'w':
+					if (engine.started() && speed <= MAX_SPEED)speed += 10;
+					if(!control.free_weheeling_thread.joinable())
+					{
+						control.free_weheeling_thread= std::thread(&Car::free_wheeling, this);
+					}
+					std::this_thread::sleep_for(.2s);
+					break;
+				case'S': case's':
+					if (speed > 0)speed -= 10;
+					if (speed < 0)speed = 0;
+					std::this_thread::sleep_for(.4s);
+					break;
 			case Escape:
 				//if (control.panel_thread.joinable())
 				stop_engine();
 				get_out();
+				if (control.free_weheeling_thread.joinable())
+				{
+					speed = 0;
+					control.free_weheeling_thread.join();
+				}
 				break;
 			}
+			if (speed == 0 && control.free_weheeling_thread.joinable())control.free_weheeling_thread.join();
 		} while (key != 27);
 	}
 
@@ -200,12 +231,33 @@ public:
 			std::this_thread::sleep_for(1s);
 	}
 
+	void free_wheeling()
+	{
+		while (speed)
+		{
+			speed--;
+			if (speed < 0)speed = 0;
+			std::this_thread::sleep_for(1s);
+		}
+	}
+
 	void control_panel()
 	{
 		while (driver_inside)
 		{
 			system("CLS");
+			HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+			for (int i = 0; i < speed / 3; i++)
+			{
+				SetConsoleTextAttribute(hConsole, 0x0A);
+				if (i > 150/3)SetConsoleTextAttribute(hConsole, 0x0E);
+				if (i > 200/3)SetConsoleTextAttribute(hConsole, 0x0C);
+				cout << "|";
+				SetConsoleTextAttribute(hConsole, 0x07);
+			}
+			cout << endl;
 			cout << "Fuel level: " << std::setprecision(4) << fixed << tank.get_fuel_level() << " Liters.";
+			cout << "Consumption: " << engine.get_consumption_per_second() << " liters. ";
 			if (tank.get_fuel_level() < 5)
 			{
 				HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
@@ -215,6 +267,7 @@ public:
 			}
 			cout << endl;
 			cout << "Engine is " << (engine.started() ? "started " : "stoped ") << endl;
+			cout << "Speed: " << speed << "km/h.\n";
 			std::this_thread::sleep_for(1s);
 		}
 	}
@@ -249,7 +302,7 @@ void main()
 	engine.info();
 #endif // ENGINE_CHECK
 
-	Car bmw(8, 80);
+	Car bmw(8, 80, 250);
 	cout << "Press Enter to get in " << endl;
 	bmw.control_car();
 }
