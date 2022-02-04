@@ -1,4 +1,4 @@
-#include <Windows.h>
+﻿#include <Windows.h>
 #include"resource.h"
 //#define MESAGE_BOX
 
@@ -26,7 +26,23 @@ BOOL CALLBACK DlgProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
 		switch (LOWORD(wParam))
 		{
-		case IDOK:MessageBox(NULL, L"���� ������ ������ ��", L"Info", MB_ICONINFORMATION); break;
+		case IDOK:MessageBox(NULL, L"秋の田の"
+			"\nかりほの庵の"
+			"\n苫をあらみ"
+			"\nわが衣手は"
+			"\nつゆにぬれつつ\n"
+
+			"\nЧтение :"
+			"\naki no ta no"
+				"\nkario no io no"
+				"\ntoma wo arami"
+				"\nwagakoromode ha"
+				"\ntsuyu ni nuretsutsu\n"
+			"\nПеревод:"
+			"\nО, ночь невзгоды!"
+				"\nКак платье отсырело!"
+				"\nВ сырую осень"
+				"\nВ лачуге бедной плохо под крышею сквозною!", L"Info", MB_ICONINFORMATION); break;
 		case IDCANCEL: EndDialog(hwnd, 0); break;
 		}
 	}
