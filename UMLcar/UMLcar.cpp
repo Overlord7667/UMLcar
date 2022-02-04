@@ -58,6 +58,7 @@ public:
 
 class Engine
 {
+	double default_consumption;
 	double consumption;
 	double consumption_per_second;
 	bool is_started;
@@ -99,6 +100,16 @@ public:
 	~Engine()
 	{
 		cout << "Engine is done:\t" << this << endl;
+	}
+	double set_consumption_by_speed(int speed)
+	{
+		set_consumption(get_consumption());
+		if (speed > 0 && speed <= 60)consumption_per_second *= 6.6;
+		else if (speed > 60 && speed <= 100)consumption_per_second *= 4.6;
+		else if (speed > 100 && speed <= 140)consumption_per_second *= 6.6;
+		else if (speed > 140 && speed <= 200)consumption_per_second *= 8.3;
+		else if (speed > 200 && speed <= 300)consumption_per_second *= 8.3;
+		return consumption_per_second;
 	}
 	void info()const
 	{
@@ -222,6 +233,7 @@ public:
 				break;
 			}
 			if (speed == 0 && control.free_weheeling_thread.joinable())control.free_weheeling_thread.join();
+			engine.set_consumption_by_speed(speed);
 		} while (key != 27);
 	}
 
@@ -257,7 +269,6 @@ public:
 			}
 			cout << endl;
 			cout << "Fuel level: " << std::setprecision(4) << fixed << tank.get_fuel_level() << " Liters.";
-			cout << "Consumption: " << engine.get_consumption_per_second() << " liters. ";
 			if (tank.get_fuel_level() < 5)
 			{
 				HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
@@ -266,11 +277,13 @@ public:
 				SetConsoleTextAttribute(hConsole, 0x07);
 			}
 			cout << endl;
+			cout << "Consumption: " << engine.get_consumption_per_second() << " liters. ";
 			cout << "Engine is " << (engine.started() ? "started " : "stoped ") << endl;
 			cout << "Speed: " << speed << "km/h.\n";
 			std::this_thread::sleep_for(1s);
 		}
 	}
+	
 
 	void info()const
 	{
@@ -302,7 +315,7 @@ void main()
 	engine.info();
 #endif // ENGINE_CHECK
 
-	Car bmw(8, 80, 250);
+	Car bmw(20, 80, 250);
 	cout << "Press Enter to get in " << endl;
 	bmw.control_car();
 }
