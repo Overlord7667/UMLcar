@@ -27,10 +27,10 @@ BOOL CALLBACK DlgProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		switch (LOWORD(wParam))
 		{
 		case IDOK:MessageBox(NULL, L"秋の田の"
-			"\nかりほの庵の"
-			"\n苫をあらみ"
-			"\nわが衣手は"
-			"\nつゆにぬれつつ\n"
+			L"\nかりほの庵の"
+			L"\n苫をあらみ"
+			L"\nわが衣手は"
+			L"\nつゆにぬれつつ\n"
 
 			"\nЧтение :"
 			"\naki no ta no"
