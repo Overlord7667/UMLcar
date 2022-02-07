@@ -1,4 +1,4 @@
-#include <iostream>
+п»ї#include <iostream>
 #include<conio.h>
 #include<Windows.h>
 #include<chrono>
@@ -192,18 +192,18 @@ public:
 			key = _getch();
 			switch (key)
 			{
-			case 13://Сесть в машину, нужно отобразить панель приборов
+			case 13://РЎРµСЃС‚СЊ РІ РјР°С€РёРЅСѓ, РЅСѓР¶РЅРѕ РѕС‚РѕР±СЂР°Р·РёС‚СЊ РїР°РЅРµР»СЊ РїСЂРёР±РѕСЂРѕРІ
 				if (driver_inside)get_out();
 				else get_in();
 				break;
 			case'F': case 'f':
 				double fuel;
-				cout << "Введите объём топлива: ";// cin >> fuel;
+				cout << "Р’РІРµРґРёС‚Рµ РѕР±СЉС‘Рј С‚РѕРїР»РёРІР°: ";// cin >> fuel;
 				cin.clear();
 				cin >> fuel;
 				fill(fuel);
 				break;
-			case'I':case'i'://Зажигание
+			case'I':case'i'://Р—Р°Р¶РёРіР°РЅРёРµ
 				if (engine.started())stop_engine();
 				else start_engine();
 				break;
@@ -304,7 +304,7 @@ void main()
 	int fuel;
 	while (true)
 	{
-		cout << "Введите объём: "; cin >> fuel;
+		cout << "Р’РІРµРґРёС‚Рµ РѕР±СЉС‘Рј: "; cin >> fuel;
 		tank.fill(fuel);
 		tank.info();
 	}
