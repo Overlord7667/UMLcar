@@ -21,7 +21,9 @@ BOOL CALLBACK DlgProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 	switch (uMsg)
 	{
-	case WM_INITDIALOG:break;
+	case WM_INITDIALOG:
+		SendMessage(hwnd, WM_SETTEXT, 0, (LPARAM)L"\nかりほの庵の");
+		break;
 	case WM_COMMAND:
 	{
 		switch (LOWORD(wParam))
