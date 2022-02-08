@@ -50,13 +50,18 @@ END
 // Dialog
 //
 
-IDD_DIALOG1 DIALOGEX 0, 0, 315, 207
+IDD_DIALOG1 DIALOGEX 0, 0, 213, 104
 STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | DS_CENTER | WS_MINIMIZEBOX | WS_MAXIMIZEBOX | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "Моё первое приложение"
 FONT 8, "MS Shell Dlg", 400, 0, 0x1
 BEGIN
-    DEFPUSHBUTTON   "OK",IDOK,111,186,50,14
-    PUSHBUTTON      "CANCEL",IDCANCEL,178,186,50,14
+    DEFPUSHBUTTON   "OK",IDOK,98,84,50,14
+    PUSHBUTTON      "CANCEL",IDCANCEL,155,84,50,14
+    PUSHBUTTON      "Copy",IDC_BTN_COPY,12,84,50,14
+    EDITTEXT        IDC_EDIT1,9,26,192,14,ES_CENTER
+    EDITTEXT        IDC_EDIT2,9,62,192,14,ES_CENTER | ES_AUTOHSCROLL
+    LTEXT           "Password",IDC_STATIC,12,48,60,12
+    LTEXT           "Login",IDC_STATIC,12,12,64,12
 END
 
 
@@ -71,9 +76,9 @@ BEGIN
     IDD_DIALOG1, DIALOG
     BEGIN
         LEFTMARGIN, 7
-        RIGHTMARGIN, 308
+        RIGHTMARGIN, 204
         TOPMARGIN, 7
-        BOTTOMMARGIN, 200
+        BOTTOMMARGIN, 97
     END
 END
 #endif    // APSTUDIO_INVOKED
@@ -88,6 +93,16 @@ IDD_DIALOG1 AFX_DIALOG_LAYOUT
 BEGIN
     0
 END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Icon
+//
+
+// Icon with lowest ID value placed first to ensure application icon
+// remains consistent on all systems.
+IDI_ICON1               ICON                    "rocket_money_space_cohet_icon_210916.ico"
 
 #endif    // Russian (Russia) resources
 /////////////////////////////////////////////////////////////////////////////
