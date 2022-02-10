@@ -1,4 +1,6 @@
-﻿#include<Windows.h>
+﻿#define _CRT_SECURE_NO_WARNING
+#include<Windows.h>
+#include<stdio.h>
 
 CONST CHAR g_szCLASS_NAME[] = "MyWindowClass";
 CONST CHAR g_szTitle[] = "こんにちは";
@@ -29,14 +31,23 @@ INT WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevinst, LPSTR lpCmdLine, IN
 	}
 
 	//2) Создание окна
+
+	int screen_width = GetSystemMetrics(SM_CXSCREEN);
+	int screen_height = GetSystemMetrics(SM_CYSCREEN);
+	int window_width = screen_width - screen_width / 4;
+	int window_height = screen_height - screen_height / 4;
+	int window_start_x = screen_width / 8;
+	int window_start_y = screen_height / 8;
+
+
 	HWND hwnd = CreateWindowEx
 	(
 		WS_EX_CLIENTEDGE,     //exStyle
 		g_szCLASS_NAME,       //имя окна
 		g_szTitle,       //Заголовок окна
 		WS_OVERLAPPEDWINDOW,  //Стиль окна OVERLAPPED всегда задаётся для главного окна программы
-		CW_USEDEFAULT, CW_USEDEFAULT, //Позиция окна
-		CW_USEDEFAULT, CW_USEDEFAULT, //Размер окна
+		window_start_x, window_start_y,
+		window_width, window_height,/*CW_USEDEFAULT, CW_USEDEFAULT,*/ //Размер окна
 		NULL,        //Родительское окно
 		NULL,        //Меню отсутствует
 		hInstance,   //*,exe файл окна
@@ -70,6 +81,23 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		break;
 	case WM_COMMAND: //Обработка команд нажатия кнопок, и других элементов окна
 		break;
+	case WM_SIZE:
+	case WM_MOVE:
+	{
+		RECT rect;
+		GetWindowRect(hwnd, &rect);
+		CONST INT SIZE = 256;
+		CHAR buffer[SIZE]{};
+		SendMessage(hwnd, WM_GETTEXT, SIZE, (LPARAM)buffer);
+		sprintf
+		(
+			buffer, "%s Position: %dx%d, Size: %dx%d",
+			g_szTitle, rect.left, rect.top, rect.right - rect.left,
+			rect.bottom - rect.top
+		);
+		SendMessage(hwnd, WM_SETTEXT, 0, (LPARAM)buffer);
+	}
+	break;
 	case WM_CLOSE:
 		switch (MessageBox(hwnd, "Вы действительно хотите закрыть окно?", "А если подумать?", MB_YESNO | MB_ICONQUESTION))
 		{
