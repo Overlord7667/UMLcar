@@ -1,9 +1,11 @@
 ﻿#define _CRT_SECURE_NO_WARNING
 #include<Windows.h>
 #include<stdio.h>
+#include"resource.h"
+
 
 CONST CHAR g_szCLASS_NAME[] = "MyWindowClass";
-CONST CHAR g_szTitle[] = "こんにちは";
+CONST CHAR g_szTitle[] = "MY PROGRAMM";
 
 
 LRESULT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
@@ -18,8 +20,10 @@ INT WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevinst, LPSTR lpCmdLine, IN
 	wc.cbClsExtra = 0;
 	wc.cbWndExtra = 0;
 	wc.hInstance = hInstance;
-	wc.hIcon = LoadIcon(NULL, IDI_APPLICATION);
-	wc.hIconSm = LoadIcon(NULL, IDI_APPLICATION);
+	//wc.hIcon = LoadIcon(hInstance, MAKEINTRESOURCE(IDI_ICON_DISCORD));
+	//wc.hIconSm = LoadIcon(hInstance, MAKEINTRESOURCE(IDI_ICON_YUOTUBE));
+	wc.hIcon = (HICON)LoadImage(hInstance, "1.ico",IMAGE_ICON,0,0,LR_DEFAULTSIZE |LR_LOADFROMFILE);
+	wc.hIconSm = (HICON)LoadImage(hInstance, "2.ico",IMAGE_ICON,0,0,LR_DEFAULTSIZE | LR_LOADFROMFILE);
 	wc.hCursor = LoadCursor(NULL, IDC_ARROW);
 	wc.hbrBackground = (HBRUSH)(COLOR_WINDOW + 1);
 	wc.lpszClassName = g_szCLASS_NAME;
@@ -42,9 +46,9 @@ INT WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevinst, LPSTR lpCmdLine, IN
 
 	HWND hwnd = CreateWindowEx
 	(
-		WS_EX_CLIENTEDGE,     //exStyle
+		WS_EX_CLIENTEDGE | WS_EX_APPWINDOW,     //exStyle
 		g_szCLASS_NAME,       //имя окна
-		g_szTitle,       //Заголовок окна
+		g_szCLASS_NAME,       //Заголовок окна
 		WS_OVERLAPPEDWINDOW,  //Стиль окна OVERLAPPED всегда задаётся для главного окна программы
 		window_start_x, window_start_y,
 		window_width, window_height,/*CW_USEDEFAULT, CW_USEDEFAULT,*/ //Размер окна
@@ -78,7 +82,11 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	switch (uMsg)
 	{
 	case WM_CREATE: //Создаются элементы окна
-		break;
+	{
+		//HICON hIcon = LoadIcon(GetModuleHandle(NULL), MAKEINTRESOURCE(IDI_ICON_DISCORD));
+		//SendMessage(hwnd, WM_SETICON, 0, (LPARAM)hIcon);
+	}
+	break;
 	case WM_COMMAND: //Обработка команд нажатия кнопок, и других элементов окна
 		break;
 	case WM_SIZE:
